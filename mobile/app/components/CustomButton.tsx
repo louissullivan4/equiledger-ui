@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
         marginVertical: 10,
         alignItems: 'center',
         justifyContent: 'center',
-        shadowColor: '#000', // Optional: shadow for a subtle 3D effect
+        shadowColor: '#F0F0F0', // Optional: shadow for a subtle 3D effect
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.3,
         shadowRadius: 3,

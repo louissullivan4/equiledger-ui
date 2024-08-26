@@ -17,7 +17,6 @@ const TopBar: React.FC<TopBarProps> = ({ heightPercentage }) => {
     const main = heightPercentage >= 30;
 
     useEffect(() => {
-        // Fetch user data from SecureStore
         const fetchUserData = async () => {
             try {
                 const storedUser = await SecureStore.getItemAsync('user');

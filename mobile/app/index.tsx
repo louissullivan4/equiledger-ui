@@ -5,6 +5,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import MainTabNavigator from './components/MainTabNavigator';
 import LoginScreen from './screens/Loginscreen';
+import ExpenseScreen from './screens/Expensescreen';  // Import ExpenseScreen
 
 const Stack = createStackNavigator();
 
@@ -38,19 +39,19 @@ export default function Index() {
     }
 
     return (
-            <SafeAreaView style={styles.container}>
-                <Stack.Navigator>
-                    {user ? (
-                        <Stack.Screen name="Main" options={{headerShown: false}}>
-                            {props => <MainTabNavigator {...props} setUser={setUser} />}
-                        </Stack.Screen>
-                    ) : (
-                        <Stack.Screen name="Login" options={{headerShown: false}}>
-                            {props => <LoginScreen {...props} setUser={setUser} />}
-                        </Stack.Screen>
-                    )}
-                </Stack.Navigator>
-            </SafeAreaView>
+        <Stack.Navigator>
+            {user ? (
+                <>
+                    <Stack.Screen name="Main" options={{headerShown: false}}>
+                        {props => <MainTabNavigator {...props} setUser={setUser} />}
+                    </Stack.Screen>
+                </>
+            ) : (
+                <Stack.Screen name="Login" options={{headerShown: false}}>
+                    {props => <LoginScreen {...props} setUser={setUser} />}
+                </Stack.Screen>
+            )}
+        </Stack.Navigator>
     );
 }
 

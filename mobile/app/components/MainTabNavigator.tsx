@@ -4,7 +4,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 // Screens
 import HomeScreen from '../screens/Homescreen';
-// import ExpenseScreen from '../screens/HomeScreen';
+import ExpenseScreen from '../screens/Expensescreen';
 // import IncomeScreen from '../screens/HomeScreen';
 // import TaxScreen from '../screens/HomeScreen';
 // import DocumentsScreen from '../screens/HomeScreen';
@@ -59,6 +59,9 @@ const MainTabNavigator: React.FC<MainTabNavigatorProps> = ({ setUser }) => {
         >
             <Tab.Screen name="Home">
                 {(props) => <HomeScreen {...props} setUser={setUser} />}
+            </Tab.Screen>
+            <Tab.Screen name="Expense">
+                {(props) => <ExpenseScreen {...props} setUser={setUser} />}
             </Tab.Screen>
             {/* <Tab.Screen name="Expense" component={ExpenseScreen} />
             <Tab.Screen name="Income" component={IncomeScreen} />
