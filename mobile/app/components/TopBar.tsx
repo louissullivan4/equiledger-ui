@@ -5,40 +5,23 @@ import * as SecureStore from 'expo-secure-store'; // Import SecureStore
 
 const screenHeight = Dimensions.get('window').height;
 
+type User = {
+    name: string;
+    email: string;
+    token: string;
+};
+
 interface TopBarProps {
     heightPercentage: number;
+    user: User
 }
 
-const TopBar: React.FC<TopBarProps> = ({ heightPercentage }) => {
-    const [name, setName] = useState<string | null>(null);
+const TopBar: React.FC<TopBarProps> = ({ heightPercentage, user }) => {
+    const [name, setName] = useState<string | null>(user.name);
     const [loading, setLoading] = useState<boolean>(true);
 
     const height = screenHeight * (heightPercentage / 100);
     const main = heightPercentage >= 30;
-
-    useEffect(() => {
-        const fetchUserData = async () => {
-            try {
-                const storedUser = await SecureStore.getItemAsync('user');
-                if (storedUser) {
-                    const user = JSON.parse(storedUser);
-                    setName(user.name);
-                } else {
-                    console.error('No user data found in SecureStore');
-                }
-            } catch (error) {
-                console.error('Error fetching user data from SecureStore:', error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchUserData();
-    }, []);
-
-    if (loading) {
-        return <ActivityIndicator size="large" color="#fff" />;
-    }
 
     return (
         <View style={[styles.container, { height }]}>
@@ -65,8 +48,8 @@ const styles = StyleSheet.create({
     topText: {
         fontSize: 25,
         marginBottom: 10,
-        color: '#fff', // White text
-        fontFamily: 'Inter', // Custom font
+        color: '#fff',
+        fontFamily: 'Inter',
         fontWeight: 'bold',
     },
     buttonContainer: {

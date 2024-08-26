@@ -1,11 +1,9 @@
 import * as React from 'react';
 import { SafeAreaView, StyleSheet, ActivityIndicator } from 'react-native';
 import * as SecureStore from 'expo-secure-store';
-import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import MainTabNavigator from './components/MainTabNavigator';
 import LoginScreen from './screens/Loginscreen';
-import ExpenseScreen from './screens/Expensescreen';  // Import ExpenseScreen
 
 const Stack = createStackNavigator();
 
@@ -43,7 +41,7 @@ export default function Index() {
             {user ? (
                 <>
                     <Stack.Screen name="Main" options={{headerShown: false}}>
-                        {props => <MainTabNavigator {...props} setUser={setUser} />}
+                        {props => <MainTabNavigator {...props} user={user} />}
                     </Stack.Screen>
                 </>
             ) : (

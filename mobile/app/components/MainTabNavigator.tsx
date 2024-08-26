@@ -10,13 +10,19 @@ import ExpenseScreen from '../screens/Expensescreen';
 // import DocumentsScreen from '../screens/HomeScreen';
 
 // Define the prop types
+type User = {
+    name: string;
+    email: string;
+    token: string;
+};
+
 type MainTabNavigatorProps = {
-    setUser: React.Dispatch<React.SetStateAction<null>>;
+    user: User;
 };
 
 const Tab = createBottomTabNavigator();
 
-const MainTabNavigator: React.FC<MainTabNavigatorProps> = ({ setUser }) => {
+const MainTabNavigator: React.FC<MainTabNavigatorProps> = ({ user }) => {
     return (
         <Tab.Navigator
             screenOptions={({ route }) => ({
@@ -58,10 +64,10 @@ const MainTabNavigator: React.FC<MainTabNavigatorProps> = ({ setUser }) => {
             })}
         >
             <Tab.Screen name="Home">
-                {(props) => <HomeScreen {...props} setUser={setUser} />}
+                {(props) => <HomeScreen {...props} user={user} />}
             </Tab.Screen>
             <Tab.Screen name="Expense">
-                {(props) => <ExpenseScreen {...props} setUser={setUser} />}
+                {(props) => <ExpenseScreen {...props} user={user}  />}
             </Tab.Screen>
             {/* <Tab.Screen name="Expense" component={ExpenseScreen} />
             <Tab.Screen name="Income" component={IncomeScreen} />

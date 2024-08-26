@@ -4,6 +4,12 @@ import { View, Text, StyleSheet } from "react-native";
 import TopBar from '../components/TopBar';
 import HomeCard from "../components/HomeCard";
 
+type User = {
+    name: string;
+    email: string;
+    token: string;
+};
+
 type RootStackParamList = {
     Home: undefined;
     ExpenseScreen: undefined;
@@ -13,16 +19,15 @@ type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, "Home">;
 
 type Props = {
     navigation: HomeScreenNavigationProp;
-    setUser: React.Dispatch<React.SetStateAction<null>>;
+    user: User
 };
 
-const HomeScreen: React.FC<Props> = ({ navigation, setUser }) => {
+const HomeScreen: React.FC<Props> = ({ navigation, user }) => {
     return (
         <View style={styles.container}>
-            <TopBar heightPercentage={30} />
+            <TopBar heightPercentage={30} user={user} />
             <View style={{ padding: 15 }}>
                 <HomeCard heightPercentage={45} navigation={navigation} />
-                {/* <Button title="Logout" onPress={() => setUser(null)} />  */}
             </View>
         </View>
     );

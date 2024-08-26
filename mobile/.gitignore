@@ -14,3 +14,5 @@ web-build/
 .DS_Store
 app/config.js
 README.md
+data.json
+clearstore.tsx

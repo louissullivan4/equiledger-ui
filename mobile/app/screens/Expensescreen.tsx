@@ -1,7 +1,14 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Modal, Button } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { Alert, View, Text, StyleSheet, ScrollView, TouchableOpacity, Modal, Button, ActivityIndicator } from 'react-native';
 import GenericTopBar from '../components/GenericTopBar';
 import { StackNavigationProp } from '@react-navigation/stack';
+import { SERVER_URL } from '../config';
+
+type User = {
+    name: string;
+    email: string;
+    token: string;
+};
 
 interface Expense {
     id: number;
@@ -18,15 +25,36 @@ interface Expense {
 
 interface ExpenseScreenProps {
     navigation: StackNavigationProp<any>;
-    setUser: React.Dispatch<React.SetStateAction<null>>;
+    user: User;
 }
 
-const ExpenseScreen: React.FC<ExpenseScreenProps> = ({ navigation, setUser }) => {
+const ExpenseScreen: React.FC<ExpenseScreenProps> = ({ navigation, user }) => {
     const [expenses, setExpenses] = useState<Expense[]>([]);
+    const [loading, setLoading] = useState<boolean>(true);
     const [expandedExpenseIds, setExpandedExpenseIds] = useState<number[]>([]);
     const [isFilterModalVisible, setIsFilterModalVisible] = useState<boolean>(false);
     const [selectedDateFilter, setSelectedDateFilter] = useState<string>('all time');
     const [sortOption, setSortOption] = useState<string>('date-latest');
+
+    useEffect(() => {
+        const fetchExpensesData = async () => {
+            try {
+                const expenseData = await getUserExpenses(user.token);
+                if (expenseData) {
+                    setExpenses(expenseData);
+                    setLoading(false);
+                }
+            } catch (error: any) {
+                Alert.alert('User Expense Request Failed', error.message);
+            }
+        };
+
+        fetchExpensesData();
+    }, []);
+
+    if (loading) {
+        return <ActivityIndicator size="large" color="#fff" />;
+    }
 
     const toggleExpand = (id: number) => {
         if (expandedExpenseIds.includes(id)) {
@@ -185,6 +213,25 @@ const ExpenseScreen: React.FC<ExpenseScreenProps> = ({ navigation, setUser }) =>
     );
 };
 
+async function getUserExpenses(token: string) {
+    try {
+        const response = await fetch(`${SERVER_URL}/expenses`, {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + token,
+            }
+        });
+        if (!response.ok) {
+            throw new Error('Failed to request expenses, please check your credentials.');
+        }
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Error during login:', error);
+        throw error;
+    }
+}
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -265,10 +312,10 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: 'rgba(0, 0, 0, 0.5)', // Dimmed background
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
     },
     modalContent: {
-        width: '85%', // Slightly wider for better space utilization
+        width: '85%',
         backgroundColor: '#FFFFFF',
         padding: 20,
         borderRadius: 10,
@@ -276,22 +323,22 @@ const styles = StyleSheet.create({
     modalTitle: {
         fontSize: 20,
         fontWeight: '700',
-        marginBottom: 20, // Increased margin for better separation
-        textAlign: 'center', // Centered title
+        marginBottom: 20,
+        textAlign: 'center',
         color: '#333',
     },
     modalSection: {
-        marginBottom: 20, // Increased margin for cleaner spacing
+        marginBottom: 20,
     },
     modalLabel: {
         fontSize: 16,
         fontWeight: '600',
-        marginBottom: 10, // Added space between label and buttons
+        marginBottom: 10,
         color: '#333',
     },
     buttonGroup: {
         flexDirection: 'row',
-        justifyContent: 'space-around', // Distribute buttons evenly
+        justifyContent: 'space-around',
     },
     button: {
         paddingVertical: 10,
@@ -307,7 +354,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
     },
     resetButton: {
-        backgroundColor: '#FF6347', // Different color for the reset button to make it stand out
+        backgroundColor: '#FF6347',
         paddingVertical: 12,
         borderRadius: 8,
         marginTop: 10,
@@ -320,7 +367,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
     },
     closeButton: {
-        backgroundColor: '#CCCCCC', // Grey for the close button
+        backgroundColor: '#CCCCCC',
         paddingVertical: 12,
         borderRadius: 8,
         marginTop: 10,
