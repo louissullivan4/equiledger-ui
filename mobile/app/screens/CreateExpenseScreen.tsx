@@ -232,6 +232,7 @@ const CreateExpenseScreen: React.FC<CreateExpenseScreenProps> = ({ navigation, u
                             <Text style={styles.inputLabel}>Category</Text>
                             <RNPickerSelect
                                 onValueChange={(value) => handleInputChange('category', value)}
+                                placeholder={{ label: '', value: '' }}
                                 items={[
                                     { label: 'Accommodation', value: 'accommodation' },
                                     { label: 'Equipment / Supplies', value: 'equipment' },
