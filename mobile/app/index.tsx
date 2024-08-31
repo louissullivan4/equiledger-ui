@@ -40,9 +40,9 @@ export default function Index() {
         <Stack.Navigator>
             {user ? (
                 <>
-                    <Stack.Screen name="Main" options={{headerShown: false}}>
-                        {props => <MainTabNavigator {...props} user={user} />}
-                    </Stack.Screen>
+                <Stack.Screen name="Main" options={{headerShown: false}}>
+                    {props => <MainTabNavigator {...props} user={user} />}
+                </Stack.Screen>
                 </>
             ) : (
                 <Stack.Screen name="Login" options={{headerShown: false}}>

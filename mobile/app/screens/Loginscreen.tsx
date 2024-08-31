@@ -16,16 +16,10 @@ export default function LoginScreen({ setUser }: { setUser: (user: User) => void
 
     const handleLogin = async (): Promise<void> => {
         try {
-            // Simulate API call to authenticate the user and get user data
             const userData = await loginWithEmailAndPassword(email, password);
-
-            // Save user data to SecureStore
             await SecureStore.setItemAsync('user', JSON.stringify(userData));
-
-            // Set user in state to switch to the App flow
             setUser(userData);
-        } catch (error) {
-            // Show an alert with the error message
+        } catch (error: any) {
             Alert.alert('Login Failed', error.message);
         }
     };
@@ -63,16 +57,14 @@ async function loginWithEmailAndPassword(email: string, password: string) {
                 password: password,
             }),
         });
-
         if (!response.ok) {
             throw new Error('Failed to login, please check your credentials.');
         }
-
         const data = await response.json();
         return data;
     } catch (error) {
         console.error('Error during login:', error);
-        throw error; // Re-throw the error so it can be handled by the caller
+        throw error;
     }
 }
 
@@ -93,8 +85,8 @@ const styles = StyleSheet.create({
     topText: {
         fontSize: 25,
         marginBottom: 10,
-        color: '#fff', // White text
-        fontFamily: 'Inter', // Custom font
+        color: '#fff',
+        fontFamily: 'Inter',
         fontWeight: 'bold',
     },
 });

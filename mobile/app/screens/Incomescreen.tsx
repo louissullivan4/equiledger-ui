@@ -29,7 +29,7 @@ interface ExpenseScreenProps {
     user: User;
 }
 
-const ExpenseScreen: React.FC<ExpenseScreenProps> = ({ navigation, user }) => {
+const IncomeScreen: React.FC<ExpenseScreenProps> = ({ navigation, user }) => {
     const [expenses, setExpenses] = useState<Expense[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [expandedExpenseIds, setExpandedExpenseIds] = useState<number[]>([]);
@@ -40,12 +40,12 @@ const ExpenseScreen: React.FC<ExpenseScreenProps> = ({ navigation, user }) => {
     const fetchExpensesData = async () => {
         setLoading(true);
         try {
-            const expenseData = await getUserExpenses(user.token);
+            const expenseData = await getUserIncome(user.token);
             if (expenseData) {
                 setExpenses(expenseData);
             }
         } catch (error: any) {
-            Alert.alert('User Expense Request Failed', error.message);
+            Alert.alert('User Income Request Failed', error.message);
         } finally {
             setLoading(false);
         }
@@ -114,7 +114,7 @@ const ExpenseScreen: React.FC<ExpenseScreenProps> = ({ navigation, user }) => {
 
     return (
         <View style={styles.container}>
-            <GenericTopBar heightPercentage={8} title={'Expenses'} />
+            <GenericTopBar heightPercentage={8} title={'Income'} />
             <ScrollView contentContainerStyle={styles.mainContainer}>
                 {filteredAndSortedExpenses.map((expense) => (
                     <TouchableOpacity
@@ -146,8 +146,8 @@ const ExpenseScreen: React.FC<ExpenseScreenProps> = ({ navigation, user }) => {
                 </TouchableOpacity>
                 <TouchableOpacity
                     style={styles.addExpenseButton}
-                    onPress={() => navigation.navigate('NewExpense')}>
-                    <Text style={styles.filterButtonText}>Add Expense</Text>
+                    onPress={() => navigation.navigate('CreateIncome')}>
+                    <Text style={styles.filterButtonText}>Add Income</Text>
                 </TouchableOpacity>
             </View>
 
@@ -158,7 +158,7 @@ const ExpenseScreen: React.FC<ExpenseScreenProps> = ({ navigation, user }) => {
             >
                 <View style={styles.modalContainer}>
                     <View style={styles.modalContent}>
-                        <Text style={styles.modalTitle}>Filter Expenses</Text>
+                        <Text style={styles.modalTitle}>Filter Income</Text>
                         {/* Filter by Date */}
                         <View style={styles.modalSection}>
                             <Text style={styles.modalLabel}>Date:</Text>
@@ -216,18 +216,20 @@ const ExpenseScreen: React.FC<ExpenseScreenProps> = ({ navigation, user }) => {
     );
 };
 
-async function getUserExpenses(token: string) {
+async function getUserIncome(token: string) {
     try {
-        const response = await fetch(`${SERVER_URL}/expenses`, {
+        const response = await fetch(`${SERVER_URL}/expenses?category=income`, {
             method: 'GET',
             headers: {
                 'Authorization': 'Bearer ' + token,
             }
         });
+        
         if (!response.ok) {
             throw new Error('Failed to request expenses, please check your credentials.');
         }
         const data = await response.json();
+        console.log(data);
         return data;
     } catch (error) {
         console.error('Error during login:', error);
@@ -384,4 +386,4 @@ const styles = StyleSheet.create({
 });
 
 
-export default ExpenseScreen;
+export default IncomeScreen;

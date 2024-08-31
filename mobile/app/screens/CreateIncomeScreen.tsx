@@ -32,11 +32,11 @@ interface CreateExpenseScreenProps {
     route?: any;
 }
 
-const CreateExpenseScreen: React.FC<CreateExpenseScreenProps> = ({ navigation, user, route }) => {
+const CreateIncomeScreen: React.FC<CreateExpenseScreenProps> = ({ navigation, user, route }) => {
     const [expense, setExpense] = useState<Expense>({
         title: '',
         description: '',
-        category: route.params?.category || '',
+        category: 'income',
         amount: '',
         currency: 'EUR',
         receipt: null,
@@ -49,7 +49,7 @@ const CreateExpenseScreen: React.FC<CreateExpenseScreenProps> = ({ navigation, u
             setExpense({
                 title: '',
                 description: '',
-                category: route.params?.category || '',
+                category: 'income',
                 amount: '',
                 currency: 'EUR',
                 receipt: null,
@@ -70,7 +70,7 @@ const CreateExpenseScreen: React.FC<CreateExpenseScreenProps> = ({ navigation, u
 
     const pickImage = async () => {
         Alert.alert(
-            "Upload Receipt",
+            "Upload Documentation",
             "Choose an option:",
             [
                 {
@@ -165,7 +165,7 @@ const CreateExpenseScreen: React.FC<CreateExpenseScreenProps> = ({ navigation, u
 
     return (
         <View style={styles.container}>
-            <GenericTopBar heightPercentage={8} title={'New Expense'} />
+            <GenericTopBar heightPercentage={8} title={'New Income'} />
             <View style={styles.mainContainer}>
                 <Animatable.View
                     animation={isSuccess ? "fadeIn" : undefined}
@@ -191,7 +191,7 @@ const CreateExpenseScreen: React.FC<CreateExpenseScreenProps> = ({ navigation, u
                                         setExpense({
                                             title: '',
                                             description: '',
-                                            category: '',
+                                            category: 'income',
                                             amount: '',
                                             currency: 'EUR',
                                             receipt: null,
@@ -199,13 +199,13 @@ const CreateExpenseScreen: React.FC<CreateExpenseScreenProps> = ({ navigation, u
                                         setIsSuccess(false);
                                     }}
                                 >
-                                    <Text style={styles.anotherButtonText}>Add Another Expense</Text>
+                                    <Text style={styles.anotherButtonText}>Add Another Income</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity
                                     style={styles.addExpenseButton}
                                     onPress={() => navigation.navigate('Expense')}
                                 >
-                                    <Text style={styles.anotherButtonText}>View Expenses</Text>
+                                    <Text style={styles.anotherButtonText}>View Income</Text>
                                 </TouchableOpacity>
                             </View>
                         </View>
@@ -216,7 +216,7 @@ const CreateExpenseScreen: React.FC<CreateExpenseScreenProps> = ({ navigation, u
                             <Text style={styles.inputLabel}>Title</Text>
                             <TextInput
                                 style={styles.input}
-                                placeholder="Expense title"
+                                placeholder="Income title"
                                 value={expense.title}
                                 onChangeText={(text) => handleInputChange('title', text)}
                             />
@@ -224,38 +224,9 @@ const CreateExpenseScreen: React.FC<CreateExpenseScreenProps> = ({ navigation, u
                             <Text style={styles.inputLabel}>Description</Text>
                             <TextInput
                                 style={styles.input}
-                                placeholder="Expense description"
+                                placeholder="Income description"
                                 value={expense.description}
                                 onChangeText={(text) => handleInputChange('description', text)}
-                            />
-
-                            <Text style={styles.inputLabel}>Category</Text>
-                            <RNPickerSelect
-                                onValueChange={(value) => handleInputChange('category', value)}
-                                items={[
-                                    { label: 'Accommodation', value: 'accommodation' },
-                                    { label: 'Equipment / Supplies', value: 'equipment' },
-                                    { label: 'Healthcare', value: 'healthcare' },
-                                    { label: 'Interest On Loans', value: 'loan-interest' },
-                                    { label: 'Legal & Accounting', value: 'accounting' },
-                                    { label: 'Meals', value: 'meals' },
-                                    { label: 'Mobile - Phone Bill, Internet & Repairs', value: 'mobile' },
-                                    { label: 'Motor Expenses - NCT, Insurance, Service, Repairs & Parking', value: 'motor-expenses' },
-                                    { label: 'Motor Fuel', value: 'motor-fuel' },
-                                    { label: 'Office Equipment', value: 'office' },
-                                    { label: 'PPE Clothing', value: 'ppe' },
-                                    { label: 'Personal Insurance', value: 'personal-insurance' },
-                                    { label: 'Stationary & Postage', value: 'stationary' },
-                                    { label: 'Trade Subscriptions & Memberships', value: 'memberships' },
-                                    { label: 'Transport - Flight, Ferry & Public Transport', value: 'transport' },
-                                    { label: 'Training', value: 'training' },
-                                    { label: 'Other', value: 'other' },
-                                ]}
-                                value={expense.category}
-                                style={{
-                                    inputIOS: styles.picker,
-                                    inputAndroid: styles.picker,
-                                }}
                             />
 
                             <View style={styles.inlineContainer}>
@@ -290,7 +261,7 @@ const CreateExpenseScreen: React.FC<CreateExpenseScreenProps> = ({ navigation, u
                                 </View>
                             </View>
 
-                            <Text style={styles.inputLabel}>Upload Receipt</Text>
+                            <Text style={styles.inputLabel}>Upload Documentation</Text>
                             {expense.receipt ? (
                                 <View style={styles.imageContainer}>
                                     <Text style={styles.receiptFilename}>{expense.receipt.uri.split('/').pop()}</Text>
@@ -309,7 +280,7 @@ const CreateExpenseScreen: React.FC<CreateExpenseScreenProps> = ({ navigation, u
 
                 {!isSuccess && (
                     <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
-                        <Text style={styles.submitButtonText}>Submit Expense</Text>
+                        <Text style={styles.submitButtonText}>Submit Income</Text>
                     </TouchableOpacity>
                 )}
             </View>
@@ -451,4 +422,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default CreateExpenseScreen;
+export default CreateIncomeScreen;

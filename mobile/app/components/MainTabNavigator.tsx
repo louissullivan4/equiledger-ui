@@ -1,13 +1,14 @@
 import * as React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { StackNavigationProp } from '@react-navigation/stack';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 // Screens
 import HomeScreen from '../screens/Homescreen';
 import ExpenseScreen from '../screens/Expensescreen';
-// import IncomeScreen from '../screens/HomeScreen';
-// import TaxScreen from '../screens/HomeScreen';
-// import DocumentsScreen from '../screens/HomeScreen';
+import CreateExpenseScreen from '../screens/CreateExpenseScreen';
+import IncomeScreen from '../screens/Incomescreen';
+import CreateIncome from '../screens/CreateIncomeScreen';
 
 // Define the prop types
 type User = {
@@ -17,12 +18,13 @@ type User = {
 };
 
 type MainTabNavigatorProps = {
+    navigation: StackNavigationProp<any>;
     user: User;
 };
 
 const Tab = createBottomTabNavigator();
 
-const MainTabNavigator: React.FC<MainTabNavigatorProps> = ({ user }) => {
+const MainTabNavigator: React.FC<MainTabNavigatorProps> = ({ navigation, user }) => {
     return (
         <Tab.Navigator
             screenOptions={({ route }) => ({
@@ -37,14 +39,8 @@ const MainTabNavigator: React.FC<MainTabNavigatorProps> = ({ user }) => {
                             iconName = 'receipt-long';
                             break;
                         case 'Income':
-                            iconName = 'attach-money';
-                            break;
-                        case 'Tax':
-                            iconName = 'account-balance';
-                            break;
-                        case 'Documents':
-                            iconName = 'folder';
-                            break;
+                        iconName = 'account-balance-wallet';
+                        break;
                         default:
                             iconName = 'help-outline';
                     }
@@ -67,12 +63,17 @@ const MainTabNavigator: React.FC<MainTabNavigatorProps> = ({ user }) => {
                 {(props) => <HomeScreen {...props} user={user} />}
             </Tab.Screen>
             <Tab.Screen name="Expense">
-                {(props) => <ExpenseScreen {...props} user={user}  />}
+                {(props) => <ExpenseScreen user={user} navigation={navigation}/>}
             </Tab.Screen>
-            {/* <Tab.Screen name="Expense" component={ExpenseScreen} />
-            <Tab.Screen name="Income" component={IncomeScreen} />
-            <Tab.Screen name="Tax" component={TaxScreen} />
-            <Tab.Screen name="Documents" component={DocumentsScreen} /> */}
+            <Tab.Screen name="NewExpense" options={{tabBarButton: () => null}}>
+                {(props) => <CreateExpenseScreen {...props} user={user} />}
+            </Tab.Screen>
+            <Tab.Screen name="Income">
+                {(props) => <IncomeScreen user={user} navigation={navigation}/>}
+            </Tab.Screen>
+            <Tab.Screen name="CreateIncome" options={{tabBarButton: () => null}}>
+                {(props) => <CreateIncome {...props} user={user} />}
+            </Tab.Screen>
         </Tab.Navigator>
     );
 };

@@ -8,7 +8,7 @@ const screenHeight = Dimensions.get('window').height;
 
 interface HomeCardProps {
     heightPercentage: number;
-    navigation: StackNavigationProp<any>; // Add navigation prop type
+    navigation: StackNavigationProp<any>;
 }
 
 const HomeCard: React.FC<HomeCardProps> = ({ heightPercentage, navigation }) => {
@@ -20,12 +20,25 @@ const HomeCard: React.FC<HomeCardProps> = ({ heightPercentage, navigation }) => 
             <Text style={styles.titleText}>My Expenses</Text>
             <Text style={styles.text}>A quick and easy way to track your business expenses on the go</Text>
             <View style={styles.buttonContainer}>
-                <CustomButton title="New Expense" onPress={() => {}} fontSize={15} backgroundColor='#B59CE0' fontColor='white'/>
-                <CustomButton title="View Expense" onPress={() => navigation.navigate('Expense')} fontSize={15} backgroundColor='#D7CBED' fontColor='white'/>
+                <CustomButton 
+                    title="New Expense" 
+                    onPress={() => navigation.navigate('NewExpense')} 
+                    fontSize={15} 
+                    backgroundColor='#B59CE0' 
+                    fontColor='white'
+                />
+                <CustomButton 
+                    title="View Expense" 
+                    onPress={() => navigation.navigate('Expense')} 
+                    fontSize={15} 
+                    backgroundColor='#D7CBED' 
+                    fontColor='white' 
+                />
             </View>
         </View>
     );
 };
+
 
 const styles = StyleSheet.create({
     container: {

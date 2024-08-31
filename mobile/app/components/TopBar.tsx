@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Dimensions, ActivityIndicator } from 'react-native';
 import CustomButton from './CustomButton';
 import * as SecureStore from 'expo-secure-store'; // Import SecureStore
+import { StackNavigationProp } from '@react-navigation/stack';
 
 const screenHeight = Dimensions.get('window').height;
 
@@ -14,25 +15,27 @@ type User = {
 interface TopBarProps {
     heightPercentage: number;
     user: User
+    navigation: StackNavigationProp<any>;
 }
 
-const TopBar: React.FC<TopBarProps> = ({ heightPercentage, user }) => {
-    const [name, setName] = useState<string | null>(user.name);
-    const [loading, setLoading] = useState<boolean>(true);
-
+const TopBar: React.FC<TopBarProps> = ({ heightPercentage, user, navigation }) => {
     const height = screenHeight * (heightPercentage / 100);
     const main = heightPercentage >= 30;
 
+    const handleCategoryPress = (category: string) => {
+        navigation.navigate('NewExpense', { category });
+    };
+
     return (
         <View style={[styles.container, { height }]}>
-            <Text style={styles.topText}>Hi {name ? name : 'User'}</Text>
+            <Text style={styles.topText}>Hi {user.name ? user.name : 'User'}</Text>
             {main && (
                 <View style={styles.mainContainer}>
                     <View style={styles.buttonContainer}>
-                        <CustomButton title="Diesel" iconName="directions-car" onPress={() => alert('Button clicked 1')} />
-                        <CustomButton title="Food" iconName="restaurant" onPress={() => alert('Button clicked 2')} />
-                        <CustomButton title="Travel" iconName="airplanemode-active" onPress={() => alert('Button clicked 3')} />
-                        <CustomButton title="Repair" iconName="construction" onPress={() => alert('Button clicked 4')} />
+                        <CustomButton title="Motor Fuel" iconName="directions-car" leftmargin={32} onPress={() => handleCategoryPress('motor-fuel')} />
+                        <CustomButton title="Meals" iconName="restaurant" leftmargin={32} onPress={() => handleCategoryPress('meals')} />
+                        <CustomButton title="Transport" iconName="airplanemode-active" leftmargin={32} onPress={() => handleCategoryPress('transport')} />
+                        <CustomButton title="Equipment" iconName="construction" leftmargin={32} onPress={() => handleCategoryPress('equipment')} />
                     </View>
                 </View>
             )}
