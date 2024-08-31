@@ -229,7 +229,6 @@ async function getUserIncome(token: string) {
             throw new Error('Failed to request expenses, please check your credentials.');
         }
         const data = await response.json();
-        console.log(data);
         return data;
     } catch (error) {
         console.error('Error during login:', error);

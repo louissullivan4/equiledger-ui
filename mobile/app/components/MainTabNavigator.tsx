@@ -20,11 +20,12 @@ type User = {
 type MainTabNavigatorProps = {
     navigation: StackNavigationProp<any>;
     user: User;
+    setUser: (user: User) => void
 };
 
 const Tab = createBottomTabNavigator();
 
-const MainTabNavigator: React.FC<MainTabNavigatorProps> = ({ navigation, user }) => {
+const MainTabNavigator: React.FC<MainTabNavigatorProps> = ({ navigation, user, setUser }) => {
     return (
         <Tab.Navigator
             screenOptions={({ route }) => ({
@@ -60,7 +61,7 @@ const MainTabNavigator: React.FC<MainTabNavigatorProps> = ({ navigation, user })
             })}
         >
             <Tab.Screen name="Home">
-                {(props) => <HomeScreen {...props} user={user} />}
+                {(props) => <HomeScreen {...props} user={user} setUser={setUser} />}
             </Tab.Screen>
             <Tab.Screen name="Expense">
                 {(props) => <ExpenseScreen user={user} navigation={navigation}/>}

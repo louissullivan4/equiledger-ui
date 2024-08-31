@@ -23,12 +23,13 @@ type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, "Home">;
 type Props = {
     navigation: HomeScreenNavigationProp;
     user: User
+    setUser: (user: User) => void
 };
 
-const HomeScreen: React.FC<Props> = ({ navigation, user }) => {
+const HomeScreen: React.FC<Props> = ({ navigation, user, setUser }) => {
     return (
         <View style={styles.container}>
-            <TopBar heightPercentage={30} user={user} navigation={navigation} />
+            <TopBar heightPercentage={30} user={user} navigation={navigation} setUser={setUser}/>
             <View style={{ padding: 15 }}>
                 <HomeCard heightPercentage={45} navigation={navigation} />
             </View>
