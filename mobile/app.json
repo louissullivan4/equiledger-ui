@@ -1,19 +1,30 @@
 {
   "expo": {
     "name": "equiLedger",
-    "slug": "equiLedger",
-    "version": "1.0.2",
+    "slug": "equiledger",
+    "version": "1.0.3",
     "scheme": "myapp",
     "icon": "./app/assets/equiledger-icon.png",
     "extra": {
       "eas": {
+        "name": "equiLedger",
+        "slug": "equiledger",
+        "version": "1.0.3",
+        "scheme": "myapp",
         "projectId": "d7bb4b4d-331a-487c-9994-f5f0493d83d6"
       }
     },
     "owner": "louissullivancs",
     "ios": {
       "bundleIdentifier": "com.stewapps.equiLedger",
-      "buildNumber": "4"
-    }
+      "buildNumber": "5"
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/d7bb4b4d-331a-487c-9994-f5f0493d83d6"
+    },
+    "android": {}
   }
 }

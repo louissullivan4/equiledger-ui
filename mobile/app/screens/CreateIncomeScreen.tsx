@@ -3,7 +3,6 @@ import { View, StyleSheet, TextInput, Text, TouchableOpacity, Alert, Keyboard, T
 import GenericTopBar from '../components/GenericTopBar';
 import * as ImagePicker from 'expo-image-picker';
 import { Camera } from 'expo-camera';
-import { Picker } from '@react-native-picker/picker';
 import { SERVER_URL } from '../config';
 import * as Animatable from 'react-native-animatable';
 import Icon from 'react-native-vector-icons/Ionicons';
