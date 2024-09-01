@@ -263,7 +263,7 @@ const CreateExpenseScreen: React.FC<CreateExpenseScreenProps> = ({ navigation, u
                                 <View style={styles.pickerWrapper}>
                                     <CustomDropdown
                                         selectedValue={expense.category}
-                                        onValueChange={(value) => handleInputChange('category', value)}
+                                        onValueChange={(value: any) => handleInputChange('category', value)}
                                         items={categories}
                                     />
                                 </View>
