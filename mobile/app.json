@@ -1,0 +1,19 @@
+{
+  "expo": {
+    "name": "equiLedger",
+    "slug": "equiLedger",
+    "version": "1.0.2",
+    "scheme": "myapp",
+    "icon": "./app/assets/equiledger-icon.png",
+    "extra": {
+      "eas": {
+        "projectId": "d7bb4b4d-331a-487c-9994-f5f0493d83d6"
+      }
+    },
+    "owner": "louissullivancs",
+    "ios": {
+      "bundleIdentifier": "com.stewapps.equiLedger",
+      "buildNumber": "4"
+    }
+  }
+}
