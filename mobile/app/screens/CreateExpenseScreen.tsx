@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, TextInput, Text, TouchableOpacity, Alert } from 'react-native';
+import { View, StyleSheet, TextInput, Text, TouchableOpacity, Alert, Keyboard, TouchableWithoutFeedback } from 'react-native';
 import GenericTopBar from '../components/GenericTopBar';
 import * as ImagePicker from 'expo-image-picker';
 import { Camera } from 'expo-camera';

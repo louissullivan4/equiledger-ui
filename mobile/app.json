@@ -17,7 +17,7 @@
     "owner": "louissullivancs",
     "ios": {
       "bundleIdentifier": "com.stewapps.equiLedger",
-      "buildNumber": "7"
+      "buildNumber": "5"
     },
     "runtimeVersion": {
       "policy": "appVersion"
