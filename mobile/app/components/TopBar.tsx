@@ -17,21 +17,18 @@ interface TopBarProps {
     heightPercentage: number;
     user: User | null;
     navigation: StackNavigationProp<any>;
-    setUser: (user: User | null) => void;
+    setUser: ((user: User | null) => void) | null;
 }
 
 const TopBar: React.FC<TopBarProps> = ({ heightPercentage, user, navigation, setUser }) => {
     const height = screenHeight * (heightPercentage / 100);
-    const main = heightPercentage >= 30;
-
-    const handleCategoryPress = (category: string) => {
-        navigation.navigate('NewExpense', { category });
-    };
-
+    
     const handleLogout = async () => {
         try {
             await SecureStore.deleteItemAsync('user');
-            setUser(null);
+            if (setUser) {
+                setUser(null);
+            }
             navigation.replace('Login');
         } catch (error) {
             Alert.alert('Logout Failed', 'An error occurred while trying to log out.');
@@ -41,19 +38,9 @@ const TopBar: React.FC<TopBarProps> = ({ heightPercentage, user, navigation, set
     return (
         <View style={[styles.container, { height }]}>
             <View style={styles.topContainer}>
-                <Text style={styles.topText}>Hi {user?.name ? user.name : 'User'}</Text>
+                <Text style={styles.topText}>Hi {user?.name ? user.name : ''}</Text>
                 <LogoutButton onPress={handleLogout} />
             </View>
-            {main && (
-                <View style={styles.mainContainer}>
-                    <View style={styles.buttonContainer}>
-                        <CustomButton title="Motor Fuel" iconName="directions-car" leftmargin={32} onPress={() => handleCategoryPress('motor-fuel')} />
-                        <CustomButton title="Meals" iconName="restaurant" leftmargin={32} onPress={() => handleCategoryPress('meals')} />
-                        <CustomButton title="Transport" iconName="airplanemode-active" leftmargin={32} onPress={() => handleCategoryPress('transport')} />
-                        <CustomButton title="Equipment" iconName="construction" leftmargin={32} onPress={() => handleCategoryPress('equipment')} />
-                    </View>
-                </View>
-            )}
         </View>
     );
 };
@@ -61,29 +48,17 @@ const TopBar: React.FC<TopBarProps> = ({ heightPercentage, user, navigation, set
 const styles = StyleSheet.create({
     container: {
         backgroundColor: '#B59CE0',
-        padding: 30,
+        padding: 15,
     },
     topText: {
         fontSize: 25,
-        marginBottom: 10,
-        color: '#fff',
-        fontFamily: 'Inter',
+        color: '#fff', // White text
+        fontFamily: 'Inter', // Custom font
         fontWeight: 'bold',
     },
-    topContainer : {
+    topContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        alignItems: 'center',
-    },
-    buttonContainer: {
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        backgroundColor: '#B59CE0',
-        borderRadius: 8,
-    },
-    mainContainer: {
         alignItems: 'center',
     }
 });

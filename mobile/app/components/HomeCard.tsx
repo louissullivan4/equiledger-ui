@@ -43,8 +43,9 @@ const HomeCard: React.FC<HomeCardProps> = ({ heightPercentage, navigation }) => 
 const styles = StyleSheet.create({
     container: {
         backgroundColor: 'white',
-        padding: 30,
+        padding: 20,
         borderRadius: 20,
+        justifyContent: 'center',
     },
     icon: {
         marginRight: 8,
@@ -73,7 +74,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: 'white',
         borderRadius: 8,
-        marginTop: 80,
+        marginTop: 50,
     },
 });
 

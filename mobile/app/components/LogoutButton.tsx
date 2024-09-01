@@ -11,7 +11,7 @@ const LogoutButton: React.FC<CustomButtonProps> = ({onPress}) => {
         <TouchableOpacity
             style={[styles.button]}
             onPress={onPress}>
-            <MaterialIcons name={'exit-to-app'} size={50} style={styles.icon} />
+            <MaterialIcons name={'exit-to-app'} size={40} style={styles.icon} />
         </TouchableOpacity>
     );
 }

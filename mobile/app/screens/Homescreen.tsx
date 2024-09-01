@@ -29,9 +29,9 @@ type Props = {
 const HomeScreen: React.FC<Props> = ({ navigation, user, setUser }) => {
     return (
         <View style={styles.container}>
-            <TopBar heightPercentage={30} user={user} navigation={navigation} setUser={setUser}/>
-            <View style={{ padding: 15 }}>
-                <HomeCard heightPercentage={45} navigation={navigation} />
+            <TopBar heightPercentage={10} user={user} navigation={navigation} setUser={setUser}/>
+            <View style={styles.homecard}>
+                <HomeCard heightPercentage={50} navigation={navigation} />
             </View>
         </View>
     );
@@ -41,6 +41,11 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: "#F0F0F0",
+    },
+    homecard: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
 });
 
