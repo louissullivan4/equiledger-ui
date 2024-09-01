@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, TextInput, Text, TouchableOpacity, Alert } from 'react-native';
+import { View, StyleSheet, TextInput, Text, TouchableOpacity, Alert, Keyboard, TouchableWithoutFeedback } from 'react-native';
 import GenericTopBar from '../components/GenericTopBar';
 import * as ImagePicker from 'expo-image-picker';
 import { Camera } from 'expo-camera';
-import RNPickerSelect from 'react-native-picker-select';
+import { Picker } from '@react-native-picker/picker';
 import { SERVER_URL } from '../config';
 import * as Animatable from 'react-native-animatable';
 import Icon from 'react-native-vector-icons/Ionicons';
 import axios from 'axios';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useFocusEffect } from '@react-navigation/native';
+import CustomDropdown from '../components/CustomDropdown';
 
 type User = {
     name: string;
@@ -161,130 +162,133 @@ const CreateIncomeScreen: React.FC<CreateExpenseScreenProps> = ({ navigation, us
             Alert.alert('Error', 'There was an issue creating your expense. Please try again.');
         }
     };
+
+    const [currency, setCurrency] = useState('EUR');
+    const items = [
+        { label: 'Euro', value: 'EUR' },
+        { label: 'US Dollar', value: 'USD' },
+        { label: 'British Pound', value: 'GBP' },
+        { label: 'Japanese Yen', value: 'JPY' },
+        { label: 'Canadian Dollar', value: 'CAD' },
+    ];
     
-
     return (
-        <View style={styles.container}>
-            <GenericTopBar heightPercentage={8} title={'New Income'} />
-            <View style={styles.mainContainer}>
-                <Animatable.View
-                    animation={isSuccess ? "fadeIn" : undefined}
-                    duration={2000}
-                    style={[styles.card, isSuccess && styles.successCard]}
-                >
-                    {isSuccess && (
-                        <View>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+            <View style={styles.container}>
+                <GenericTopBar heightPercentage={8} title={'New Income'} />
+                <View style={styles.mainContainer}>
+                    <Animatable.View
+                        animation={isSuccess ? "fadeIn" : undefined}
+                        duration={2000}
+                        style={[styles.card, isSuccess && styles.successCard]}
+                    >
+                        {isSuccess && (
                             <View>
-                                <Animatable.View
-                                    animation="bounceIn"
-                                    duration={6000}
-                                    style={styles.successContainer}
-                                >
-                                    <Icon name="checkmark-circle" size={100} color="#FFF" />
-                                </Animatable.View>
-                            </View>
-                            <View style={styles.buttonGroup}>
-                                <TouchableOpacity
-                                    style={styles.anotherButton}
-                                    onPress={() => {
-                                        // Reset the form state to initial values
-                                        setExpense({
-                                            title: '',
-                                            description: '',
-                                            category: 'income',
-                                            amount: '',
-                                            currency: 'EUR',
-                                            receipt: null,
-                                        });
-                                        setIsSuccess(false);
-                                    }}
-                                >
-                                    <Text style={styles.anotherButtonText}>Add Another Income</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity
-                                    style={styles.addExpenseButton}
-                                    onPress={() => navigation.navigate('Expense')}
-                                >
-                                    <Text style={styles.anotherButtonText}>View Income</Text>
-                                </TouchableOpacity>
-                            </View>
-                        </View>
-                    )}
-
-                    {!isSuccess && (
-                        <>
-                            <Text style={styles.inputLabel}>Title</Text>
-                            <TextInput
-                                style={styles.input}
-                                placeholder="Income title"
-                                value={expense.title}
-                                onChangeText={(text) => handleInputChange('title', text)}
-                            />
-
-                            <Text style={styles.inputLabel}>Description</Text>
-                            <TextInput
-                                style={styles.input}
-                                placeholder="Income description"
-                                value={expense.description}
-                                onChangeText={(text) => handleInputChange('description', text)}
-                            />
-
-                            <View style={styles.inlineContainer}>
-                                <View style={styles.amountContainer}>
-                                    <Text style={styles.inputLabel}>Amount</Text>
-                                    <TextInput
-                                        style={styles.input}
-                                        placeholder="Amount"
-                                        value={expense.amount.toString()}
-                                        keyboardType="numeric"
-                                        onChangeText={(text) => handleInputChange('amount', text)}
-                                    />
+                                <View>
+                                    <Animatable.View
+                                        animation="bounceIn"
+                                        duration={6000}
+                                        style={styles.successContainer}
+                                    >
+                                        <Icon name="checkmark-circle" size={100} color="#FFF" />
+                                    </Animatable.View>
                                 </View>
-
-                                <View style={styles.currencyContainer}>
-                                    <Text style={styles.inputLabel}>Currency</Text>
-                                    <RNPickerSelect
-                                        onValueChange={(value) => handleInputChange('currency', value)}
-                                        items={[
-                                            { label: 'Euro', value: 'EUR' },
-                                            { label: 'US Dollar', value: 'USD' },
-                                            { label: 'British Pound', value: 'GBP' },
-                                            { label: 'Japanese Yen', value: 'JPY' },
-                                            { label: 'Canadian Dollar', value: 'CAD' },
-                                        ]}
-                                        value={expense.currency}
-                                        style={{
-                                            inputIOS: styles.picker,
-                                            inputAndroid: styles.picker,
+                                <View style={styles.buttonGroup}>
+                                    <TouchableOpacity
+                                        style={styles.anotherButton}
+                                        onPress={() => {
+                                            // Reset the form state to initial values
+                                            setExpense({
+                                                title: '',
+                                                description: '',
+                                                category: 'income',
+                                                amount: '',
+                                                currency: 'EUR',
+                                                receipt: null,
+                                            });
+                                            setIsSuccess(false);
                                         }}
-                                    />
-                                </View>
-                            </View>
-
-                            <Text style={styles.inputLabel}>Upload Documentation</Text>
-                            {expense.receipt ? (
-                                <View style={styles.imageContainer}>
-                                    <Text style={styles.receiptFilename}>{expense.receipt.uri.split('/').pop()}</Text>
-                                    <TouchableOpacity onPress={pickImage}>
-                                        <Text style={styles.replaceButtonText}>Replace</Text>
+                                    >
+                                        <Text style={styles.anotherButtonText}>Add Another Income</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity
+                                        style={styles.addExpenseButton}
+                                        onPress={() => navigation.navigate('Income')}
+                                    >
+                                        <Text style={styles.anotherButtonText}>View Income</Text>
                                     </TouchableOpacity>
                                 </View>
-                            ) : (
-                                <TouchableOpacity style={styles.imagePicker} onPress={pickImage}>
-                                    <Text style={styles.plusSign}>+</Text>
-                                </TouchableOpacity>
-                            )}
-                        </>
-                    )}
-                </Animatable.View>
+                            </View>
+                        )}
 
-                {!isSuccess && (
-                    <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
-                        <Text style={styles.submitButtonText}>Submit Income</Text>
-                    </TouchableOpacity>
-                )}
+                        {!isSuccess && (
+                            <>
+                                <Text style={styles.inputLabel}>Title</Text>
+                                <TextInput
+                                    style={styles.input}
+                                    placeholder="Income title"
+                                    value={expense.title}
+                                    onChangeText={(text) => handleInputChange('title', text)}
+                                />
+
+                                <Text style={styles.inputLabel}>Description</Text>
+                                <TextInput
+                                    style={styles.input}
+                                    placeholder="Income description"
+                                    value={expense.description}
+                                    onChangeText={(text) => handleInputChange('description', text)}
+                                />
+
+                                <View style={styles.inlineContainer}>
+                                    <View style={styles.amountContainer}>
+                                        <Text style={styles.inputLabel}>Amount</Text>
+                                        <TextInput
+                                            style={styles.input}
+                                            placeholder="Amount"
+                                            value={expense.amount.toString()}
+                                            keyboardType="numeric"
+                                            onChangeText={(text) => handleInputChange('amount', text)}
+                                        />
+                                    </View>
+
+                                    <View style={styles.currencyContainer}>
+                                        <Text style={styles.inputLabel}>Currency</Text>
+                                        <View style={styles.pickerWrapper}>
+                                        <CustomDropdown
+                                            selectedValue={currency}
+                                            onValueChange={setCurrency}
+                                            items={items}
+                                        />
+                                        </View>
+                                        
+                                    </View>
+                                </View>
+
+                                <Text style={styles.inputLabel}>Upload Documentation</Text>
+                                {expense.receipt ? (
+                                    <View style={styles.imageContainer}>
+                                        <Text style={styles.receiptFilename}>{expense.receipt.uri.split('/').pop()}</Text>
+                                        <TouchableOpacity onPress={pickImage}>
+                                            <Text style={styles.replaceButtonText}>Replace</Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                ) : (
+                                    <TouchableOpacity style={styles.imagePicker} onPress={pickImage}>
+                                        <Text style={styles.plusSign}>+</Text>
+                                    </TouchableOpacity>
+                                )}
+                            </>
+                        )}
+                    </Animatable.View>
+
+                    {!isSuccess && (
+                        <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
+                            <Text style={styles.submitButtonText}>Submit Income</Text>
+                        </TouchableOpacity>
+                    )}
+                </View>
             </View>
-        </View>
+        </TouchableWithoutFeedback>
     );
 };
 
@@ -360,13 +364,23 @@ const styles = StyleSheet.create({
         fontSize: 16,
         textAlignVertical: 'top',
     },
-    picker: {
-        height: 50,
-        width: '100%',
-        backgroundColor: '#F0F0F0',
-        borderRadius: 8,
+    pickerWrapper: {
+        borderColor: 'white',
+        overflow: 'hidden',
         marginBottom: 15,
-        paddingLeft: 10,
+    },
+    picker: {
+        height: 40,
+        width: '100%',
+        backgroundColor: 'white',
+        borderRadius: 8,
+        color: '#000',
+    },
+    pickerItem: {
+        height: 40,
+        color: '#000',
+        backgroundColor: 'white',
+        borderRadius: 8,
     },
     inlineContainer: {
         flexDirection: 'row',
@@ -374,7 +388,7 @@ const styles = StyleSheet.create({
     },
     amountContainer: {
         flex: 2,
-        marginRight: 10,
+        marginRight: 20,
     },
     currencyContainer: {
         flex: 1,

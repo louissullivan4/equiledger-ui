@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, TextInput, Text, TouchableOpacity, Alert } from 'react-native';
+import { View, StyleSheet, TextInput, Text, TouchableOpacity, Alert, Keyboard, TouchableWithoutFeedback } from 'react-native';
+import { Picker } from '@react-native-picker/picker';
 import GenericTopBar from '../components/GenericTopBar';
 import * as ImagePicker from 'expo-image-picker';
 import { Camera } from 'expo-camera';
-import RNPickerSelect from 'react-native-picker-select';
 import { SERVER_URL } from '../config';
 import * as Animatable from 'react-native-animatable';
 import Icon from 'react-native-vector-icons/Ionicons';
 import axios from 'axios';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useFocusEffect } from '@react-navigation/native';
+import CustomDropdown from '../components/CustomDropdown';
 
 type User = {
     name: string;
@@ -161,162 +162,163 @@ const CreateExpenseScreen: React.FC<CreateExpenseScreenProps> = ({ navigation, u
             Alert.alert('Error', 'There was an issue creating your expense. Please try again.');
         }
     };
-    
+
+    const categories = [
+        { label: "Accommodation", value: "accommodation" },
+        { label: "Equipment / Supplies", value: "equipment" },
+        { label: "Healthcare", value: "healthcare" },
+        { label: "Interest On Loans", value: "loan-interest" },
+        { label: "Legal & Accounting", value: "accounting" },
+        { label: "Meals", value: "meals" },
+        { label: "Mobile - Phone Bill, Internet & Repairs", value: "mobile" },
+        { label: "Motor Expenses - NCT, Insurance, Service, Repairs & Parking", value: "motor-expenses" },
+        { label: "Motor Fuel", value: "motor-fuel" },
+        { label: "Office Equipment", value: "office" },
+        { label: "PPE Clothing", value: "ppe" },
+        { label: "Personal Insurance", value: "personal-insurance" },
+        { label: "Stationary & Postage", value: "stationary" },
+        { label: "Trade Subscriptions & Memberships", value: "memberships" },
+        { label: "Transport - Flight, Ferry & Public Transport", value: "transport" },
+        { label: "Training", value: "training" },
+        { label: "Other", value: "other" },
+    ];
+
+    const [currency, setCurrency] = useState('EUR');
+    const items = [
+        { label: 'Euro', value: 'EUR' },
+        { label: 'US Dollar', value: 'USD' },
+        { label: 'British Pound', value: 'GBP' },
+        { label: 'Japanese Yen', value: 'JPY' },
+        { label: 'Canadian Dollar', value: 'CAD' },
+    ];
 
     return (
-        <View style={styles.container}>
-            <GenericTopBar heightPercentage={8} title={'New Expense'} />
-            <View style={styles.mainContainer}>
-                <Animatable.View
-                    animation={isSuccess ? "fadeIn" : undefined}
-                    duration={2000}
-                    style={[styles.card, isSuccess && styles.successCard]}
-                >
-                    {isSuccess && (
-                        <View>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+            <View style={styles.container}>
+                <GenericTopBar heightPercentage={8} title={'New Expense'} />
+                <View style={styles.mainContainer}>
+                    <Animatable.View
+                        animation={isSuccess ? "fadeIn" : undefined}
+                        duration={2000}
+                        style={[styles.card, isSuccess && styles.successCard]}
+                    >
+                        {isSuccess && (
                             <View>
-                                <Animatable.View
-                                    animation="bounceIn"
-                                    duration={6000}
-                                    style={styles.successContainer}
-                                >
-                                    <Icon name="checkmark-circle" size={100} color="#FFF" />
-                                </Animatable.View>
-                            </View>
-                            <View style={styles.buttonGroup}>
-                                <TouchableOpacity
-                                    style={styles.anotherButton}
-                                    onPress={() => {
-                                        // Reset the form state to initial values
-                                        setExpense({
-                                            title: '',
-                                            description: '',
-                                            category: '',
-                                            amount: '',
-                                            currency: 'EUR',
-                                            receipt: null,
-                                        });
-                                        setIsSuccess(false);
-                                    }}
-                                >
-                                    <Text style={styles.anotherButtonText}>Add Another Expense</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity
-                                    style={styles.addExpenseButton}
-                                    onPress={() => navigation.navigate('Expense')}
-                                >
-                                    <Text style={styles.anotherButtonText}>View Expenses</Text>
-                                </TouchableOpacity>
-                            </View>
-                        </View>
-                    )}
-
-                    {!isSuccess && (
-                        <>
-                            <Text style={styles.inputLabel}>Title</Text>
-                            <TextInput
-                                style={styles.input}
-                                placeholder="Expense title"
-                                value={expense.title}
-                                onChangeText={(text) => handleInputChange('title', text)}
-                            />
-
-                            <Text style={styles.inputLabel}>Description</Text>
-                            <TextInput
-                                style={styles.input}
-                                placeholder="Expense description"
-                                value={expense.description}
-                                onChangeText={(text) => handleInputChange('description', text)}
-                            />
-
-                            <Text style={styles.inputLabel}>Category</Text>
-                            <RNPickerSelect
-                                onValueChange={(value) => handleInputChange('category', value)}
-                                placeholder={{ label: '', value: '' }}
-                                items={[
-                                    { label: 'Accommodation', value: 'accommodation' },
-                                    { label: 'Equipment / Supplies', value: 'equipment' },
-                                    { label: 'Healthcare', value: 'healthcare' },
-                                    { label: 'Interest On Loans', value: 'loan-interest' },
-                                    { label: 'Legal & Accounting', value: 'accounting' },
-                                    { label: 'Meals', value: 'meals' },
-                                    { label: 'Mobile - Phone Bill, Internet & Repairs', value: 'mobile' },
-                                    { label: 'Motor Expenses - NCT, Insurance, Service, Repairs & Parking', value: 'motor-expenses' },
-                                    { label: 'Motor Fuel', value: 'motor-fuel' },
-                                    { label: 'Office Equipment', value: 'office' },
-                                    { label: 'PPE Clothing', value: 'ppe' },
-                                    { label: 'Personal Insurance', value: 'personal-insurance' },
-                                    { label: 'Stationary & Postage', value: 'stationary' },
-                                    { label: 'Trade Subscriptions & Memberships', value: 'memberships' },
-                                    { label: 'Transport - Flight, Ferry & Public Transport', value: 'transport' },
-                                    { label: 'Training', value: 'training' },
-                                    { label: 'Other', value: 'other' },
-                                ]}
-                                value={expense.category}
-                                style={{
-                                    inputIOS: styles.picker,
-                                    inputAndroid: styles.picker,
-                                }}
-                            />
-
-                            <View style={styles.inlineContainer}>
-                                <View style={styles.amountContainer}>
-                                    <Text style={styles.inputLabel}>Amount</Text>
-                                    <TextInput
-                                        style={styles.input}
-                                        placeholder="Amount"
-                                        value={expense.amount.toString()}
-                                        keyboardType="numeric"
-                                        onChangeText={(text) => handleInputChange('amount', text)}
-                                    />
+                                <View>
+                                    <Animatable.View
+                                        animation="bounceIn"
+                                        duration={6000}
+                                        style={styles.successContainer}
+                                    >
+                                        <Icon name="checkmark-circle" size={100} color="#FFF" />
+                                    </Animatable.View>
                                 </View>
-
-                                <View style={styles.currencyContainer}>
-                                    <Text style={styles.inputLabel}>Currency</Text>
-                                    <RNPickerSelect
-                                        onValueChange={(value) => handleInputChange('currency', value)}
-                                        items={[
-                                            { label: 'Euro', value: 'EUR' },
-                                            { label: 'US Dollar', value: 'USD' },
-                                            { label: 'British Pound', value: 'GBP' },
-                                            { label: 'Japanese Yen', value: 'JPY' },
-                                            { label: 'Canadian Dollar', value: 'CAD' },
-                                        ]}
-                                        value={expense.currency}
-                                        style={{
-                                            inputIOS: styles.picker,
-                                            inputAndroid: styles.picker,
+                                <View style={styles.buttonGroup}>
+                                    <TouchableOpacity
+                                        style={styles.anotherButton}
+                                        onPress={() => {
+                                            // Reset the form state to initial values
+                                            setExpense({
+                                                title: '',
+                                                description: '',
+                                                category: '',
+                                                amount: '',
+                                                currency: 'EUR',
+                                                receipt: null,
+                                            });
+                                            setIsSuccess(false);
                                         }}
-                                    />
-                                </View>
-                            </View>
-
-                            <Text style={styles.inputLabel}>Upload Receipt</Text>
-                            {expense.receipt ? (
-                                <View style={styles.imageContainer}>
-                                    <Text style={styles.receiptFilename}>{expense.receipt.uri.split('/').pop()}</Text>
-                                    <TouchableOpacity onPress={pickImage}>
-                                        <Text style={styles.replaceButtonText}>Replace</Text>
+                                    >
+                                        <Text style={styles.anotherButtonText}>Add Another Expense</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity
+                                        style={styles.addExpenseButton}
+                                        onPress={() => navigation.navigate('Expense')}
+                                    >
+                                        <Text style={styles.anotherButtonText}>View Expenses</Text>
                                     </TouchableOpacity>
                                 </View>
-                            ) : (
-                                <TouchableOpacity style={styles.imagePicker} onPress={pickImage}>
-                                    <Text style={styles.plusSign}>+</Text>
-                                </TouchableOpacity>
-                            )}
-                        </>
+                            </View>
+                        )}
+    
+                        {!isSuccess && (
+                            <>
+                                <Text style={styles.inputLabel}>Title</Text>
+                                <TextInput
+                                    style={styles.input}
+                                    placeholder="Expense title"
+                                    value={expense.title}
+                                    onChangeText={(text) => handleInputChange('title', text)}
+                                />
+    
+                                <Text style={styles.inputLabel}>Description</Text>
+                                <TextInput
+                                    style={styles.input}
+                                    placeholder="Expense description"
+                                    value={expense.description}
+                                    onChangeText={(text) => handleInputChange('description', text)}
+                                />
+    
+                                <Text style={styles.inputLabel}>Category</Text>
+                                <View style={styles.pickerWrapper}>
+                                    <CustomDropdown
+                                        selectedValue={expense.category}
+                                        onValueChange={(value) => handleInputChange('category', value)}
+                                        items={categories}
+                                    />
+                                </View>
+    
+                                <View style={styles.inlineContainer}>
+                                    <View style={styles.amountContainer}>
+                                        <Text style={styles.inputLabel}>Amount</Text>
+                                        <TextInput
+                                            style={styles.input}
+                                            placeholder="Amount"
+                                            value={expense.amount.toString()}
+                                            keyboardType="numeric"
+                                            onChangeText={(text) => handleInputChange('amount', text)}
+                                        />
+                                    </View>
+    
+                                    <View style={styles.currencyContainer}>
+                                        <Text style={styles.inputLabel}>Currency</Text>
+                                        <View style={styles.pickerWrapper}>
+                                        <CustomDropdown
+                                            selectedValue={currency}
+                                            onValueChange={setCurrency}
+                                            items={items}
+                                        />
+                                        </View>
+                                    </View>
+                                </View>
+    
+                                <Text style={styles.inputLabel}>Upload Receipt</Text>
+                                {expense.receipt ? (
+                                    <View style={styles.imageContainer}>
+                                        <Text style={styles.receiptFilename}>{expense.receipt.uri.split('/').pop()}</Text>
+                                        <TouchableOpacity onPress={pickImage}>
+                                            <Text style={styles.replaceButtonText}>Replace</Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                ) : (
+                                    <TouchableOpacity style={styles.imagePicker} onPress={pickImage}>
+                                        <Text style={styles.plusSign}>+</Text>
+                                    </TouchableOpacity>
+                                )}
+                            </>
+                        )}
+                    </Animatable.View>
+    
+                    {!isSuccess && (
+                        <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
+                            <Text style={styles.submitButtonText}>Submit Expense</Text>
+                        </TouchableOpacity>
                     )}
-                </Animatable.View>
-
-                {!isSuccess && (
-                    <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
-                        <Text style={styles.submitButtonText}>Submit Expense</Text>
-                    </TouchableOpacity>
-                )}
+                </View>
             </View>
-        </View>
+        </TouchableWithoutFeedback>
     );
-};
+}
 
 const styles = StyleSheet.create({
     container: {
@@ -390,13 +392,23 @@ const styles = StyleSheet.create({
         fontSize: 16,
         textAlignVertical: 'top',
     },
-    picker: {
-        height: 50,
-        width: '100%',
-        backgroundColor: '#F0F0F0',
-        borderRadius: 8,
+    pickerWrapper: {
+        borderColor: 'white',
+        overflow: 'hidden',
         marginBottom: 15,
-        paddingLeft: 10,
+    },
+    picker: {
+        height: 40,
+        width: '100%',
+        backgroundColor: 'white',
+        borderRadius: 8,
+        color: '#000',
+    },
+    pickerItem: {
+        height: 40,
+        color: '#000',
+        backgroundColor: 'white',
+        borderRadius: 8,
     },
     inlineContainer: {
         flexDirection: 'row',
@@ -404,7 +416,7 @@ const styles = StyleSheet.create({
     },
     amountContainer: {
         flex: 2,
-        marginRight: 10,
+        marginRight: 20,
     },
     currencyContainer: {
         flex: 1,
