@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, TextInput, StyleSheet, Text, Alert } from 'react-native';
+import { View, TextInput, StyleSheet, Text, Alert, Keyboard, TouchableWithoutFeedback } from 'react-native';
 import CustomButton from '../components/CustomButton';
 import * as SecureStore from 'expo-secure-store';
 import { SERVER_URL } from '../config';
@@ -25,23 +25,25 @@ export default function LoginScreen({ setUser }: { setUser: (user: User) => void
     };
 
     return (
-        <View style={styles.container}>
-            <Text style={styles.topText}>Login</Text>
-            <TextInput
-                value={email}
-                onChangeText={setEmail}
-                placeholder="Email"
-                style={styles.input}
-            />
-            <TextInput
-                value={password}
-                onChangeText={setPassword}
-                placeholder="Password"
-                secureTextEntry
-                style={styles.input}
-            />
-            <CustomButton title="Submit" onPress={handleLogin} />
-        </View>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+            <View style={styles.container}>
+                <Text style={styles.topText}>Login</Text>
+                <TextInput
+                    value={email}
+                    onChangeText={setEmail}
+                    placeholder="Email"
+                    style={styles.input}
+                />
+                <TextInput
+                    value={password}
+                    onChangeText={setPassword}
+                    placeholder="Password"
+                    secureTextEntry
+                    style={styles.input}
+                />
+                <CustomButton title="Submit" onPress={handleLogin} />
+            </View>
+        </TouchableWithoutFeedback>
     );
 }
 
