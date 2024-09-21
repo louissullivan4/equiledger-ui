@@ -29,7 +29,7 @@ type Props = {
 const HomeScreen: React.FC<Props> = ({ navigation, user, setUser }) => {
     return (
         <View style={styles.container}>
-            <TopBar heightPercentage={10} user={user} navigation={navigation} setUser={setUser}/>
+            <TopBar heightPercentage={9} user={user} navigation={navigation} setUser={setUser}/>
             <View style={styles.homecard}>
                 <HomeCard heightPercentage={50} navigation={navigation} />
             </View>

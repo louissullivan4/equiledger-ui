@@ -1,0 +1,338 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@600&family=Roboto:wght@500&display=swap');
+
+:root {
+    --background-color: #F4F5FF;
+    --current-line: #44475a;
+    --selection: #44475a;
+    --foreground: #f8f8f2;
+    --header-font: #282A36;
+    --comment: #6272a4;
+    --cyan: #8be9fd;
+    --green: #50fa7b;
+    --orange: #ffb86c;
+    --pink: #ff79c6;
+    --purple: #bd93f9;
+    --red: #ff5555;
+    --yellow: #f1fa8c;
+}
+
+* {
+    font-family: 'Roboto Mono', monospace;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    background-color: var(--background-color);
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Container for pages */
+.login-main-page, .signup-main-page {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: var(--background-color);
+}
+
+header, section, main {
+    text-align: center;
+}
+
+header h1 {
+    font-size: 2em;
+    color: var(--header-font);
+    margin-bottom: 1.5em;
+}
+
+main {
+    background-color: white;
+    padding: 2em;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    width: 350px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+input[type="email"], input[type="password"], input[type="text"] {
+    width: 100%;
+    padding: 0.75em;
+    margin-bottom: 1em;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: small;
+}
+
+input[type="email"]:hover, input[type="password"]:hover, input[type="text"]:hover {
+    border-color: var(--cyan);
+}
+
+input[type="email"]:focus, input[type="password"]:focus, input[type="text"]:focus {
+    outline: none;
+    box-shadow: 0 0 5px var(--cyan);
+}
+
+input[type="password"].error {
+    border-color: var(--red);
+    box-shadow: 0 0 5px var(--red);
+}
+
+form button {
+    width: 100%;
+    padding: 0.75em;
+    background-color: var(--purple);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+/* Hover and active button animations */
+form button:hover {
+    transform: scale(1.05);
+    background-color: var(--green);
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+form button:active::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 120%;
+    padding-top: 120%;
+    transform: translate(-50%, -50%);
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    animation: ripple 0.6s linear;
+}
+
+.error-message {
+    color: var(--red);
+    font-size: 0.9em;
+    margin: 0.5em 0;
+    text-align: left;
+    width: 100%;
+}
+
+/* Animation for button */
+@keyframes ripple {
+    from {
+        transform: translate(-50%, -50%) scale(0);
+        opacity: 1;
+    }
+    to {
+        transform: translate(-50%, -50%) scale(4);
+        opacity: 0;
+    }
+}
+
+p {
+    color: var(--header-font);
+    text-align: center;
+    margin-bottom: 1.5em;
+    font-size: 1.25em;
+}
+
+.login-page-toggle {
+    margin-top: 1em;
+}
+
+.login-page-toggle button {
+    padding: 0.75em;
+    color: var(--comment);
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: small;
+}
+
+.login-page-toggle button:hover {
+    text-decoration: underline;
+    color: var(--current-line);
+}
+
+.error-message {
+    color: var(--red);
+    font-size: 0.9em;
+    margin: 0.5em 0;
+    text-align: left;
+    width: 100%;
+}
+
+.password-container {
+    position: relative;
+    width: 100%;
+  }
+  
+  .password-container input {
+    width: 100%;
+    padding-right: 2.5em,
+  }
+  
+  .eye-icon {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: var(--current-line);
+    font-size: 1.2em;
+  }
+  
+  .eye-icon:hover {
+    color: var(--cyan);
+  }
+
+.create-account-main-page main {
+    background-color: white;
+    padding: 2em;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    width: 750px; /* Wider form */
+    margin: 0 auto; /* Center the form */
+}
+
+.create-account-main-page form {
+    display: grid;
+    grid-template-columns: 45% 55%; /* 40% for labels, 60% for inputs */
+    grid-gap: 10px; /* Add space between label and input */
+    align-items: center; /* Center labels and inputs vertically */
+}
+
+.create-account-main-page form label {
+    font-family: 'Roboto', sans-serif;
+    color: var(--current-line);
+    padding-right: 10px; /* Add some space between label and input */
+    padding-bottom: 1em;
+    text-align: left; /* Align label text to the right */
+}
+
+.create-account-main-page input[type="email"], 
+.create-account-main-page input[type="password"], 
+.create-account-main-page input[type="text"], 
+.create-account-main-page input[type="tel"], 
+.create-account-main-page input[type="date"], 
+.create-account-main-page select {
+    width: 100%;
+    padding: 0.75em;
+    margin-bottom: 1em;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: small;
+}
+
+.create-account-main-page select {
+    appearance: none; /* Remove the default browser styling */
+    background-color: white;
+}
+
+.create-account-main-page select:hover, 
+.create-account-main-page input[type="email"]:hover, 
+.create-account-main-page input[type="password"]:hover, 
+.create-account-main-page input[type="text"]:hover, 
+.create-account-main-page input[type="tel"]:hover, 
+.create-account-main-page input[type="date"]:hover {
+    border-color: var(--cyan);
+}
+
+.create-account-main-page select:focus, 
+.create-account-main-page input[type="email"]:focus, 
+.create-account-main-page input[type="password"]:focus, 
+.create-account-main-page input[type="text"]:focus, 
+.create-account-main-page input[type="tel"]:focus, 
+.create-account-main-page input[type="date"]:focus {
+    outline: none;
+    box-shadow: 0 0 5px var(--cyan);
+}
+
+.create-account-main-page form button {
+    grid-column: 1 / 3; /* Make the submit button span both columns */
+    width: 100%;
+    padding: 0.75em;
+    background-color: var(--purple);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s;
+    padding-top: 1em;
+}
+
+.create-account-main-page form button:hover {
+    transform: scale(1.05);
+    background-color: var(--green);
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.create-account-main-page select option[disabled] {
+    color: #aaa; /* Light grey for placeholder */
+}
+
+.create-account-main-page  select {
+    color: black;
+}
+
+.create-account-main-page option:not(:first-of-type) {
+    color: black;
+  }
+
+.create-account-main-page .error-message {
+    grid-column: 1 / 3; /* Make error messages span both columns */
+}
+
+.required {
+    color: red;
+    margin-left: 5px; /* Add space between label text and asterisk */
+    font-weight: bold;
+  }
+
+  /* Hide the default file input */
+input[type="file"] {
+    display: none;
+  }
+  
+.custom-file-upload {
+    display: inline-block;
+    padding: 0.75em;
+    background-color: var(--cyan);
+    color: #ffffff !important;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s;
+    text-align: center !important;
+    width: 60%;
+    margin-bottom: 1em;
+}
+
+.custom-file-upload.uploaded {
+    background-color: var(--green);
+    color: #ffffff;
+  }
+
+.custom-file-upload:hover {
+    background-color: var(--green);
+    transform: scale(1.05);
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.custom-file-upload-wrapper {
+    grid-column: 1 / 3;
+    display: flex;
+    justify-content: center;
+}

@@ -114,7 +114,7 @@ const IncomeScreen: React.FC<ExpenseScreenProps> = ({ navigation, user }) => {
 
     return (
         <View style={styles.container}>
-            <GenericTopBar heightPercentage={8} title={'Income'} />
+            <GenericTopBar heightPercentage={9} title={'Income'} />
             <ScrollView contentContainerStyle={styles.mainContainer}>
                 {filteredAndSortedExpenses.map((expense) => (
                     <TouchableOpacity

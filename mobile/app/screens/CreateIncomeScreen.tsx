@@ -1,5 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, TextInput, Text, TouchableOpacity, Alert, Keyboard, TouchableWithoutFeedback} from 'react-native';
+import { 
+    View, 
+    StyleSheet, 
+    TextInput, 
+    Text, 
+    TouchableOpacity, 
+    Alert, 
+    Keyboard, 
+    TouchableWithoutFeedback, 
+    ActivityIndicator 
+} from 'react-native';
 import GenericTopBar from '../components/GenericTopBar';
 import * as ImagePicker from 'expo-image-picker';
 import { Camera } from 'expo-camera';
@@ -17,7 +27,7 @@ type User = {
     token: string;
 };
 
-interface Expense {
+interface Income {
     title: string;
     description: string;
     category: string;
@@ -26,14 +36,14 @@ interface Expense {
     receipt: any;
 }
 
-interface CreateExpenseScreenProps {
+interface CreateIncomeScreenProps {
     navigation: StackNavigationProp<any>;
     user: User;
     route?: any;
 }
 
-const CreateIncomeScreen: React.FC<CreateExpenseScreenProps> = ({ navigation, user, route }) => {
-    const [expense, setExpense] = useState<Expense>({
+const CreateIncomeScreen: React.FC<CreateIncomeScreenProps> = ({ navigation, user, route }) => {
+    const [income, setIncome] = useState<Income>({
         title: '',
         description: '',
         category: 'income',
@@ -42,11 +52,12 @@ const CreateIncomeScreen: React.FC<CreateExpenseScreenProps> = ({ navigation, us
         receipt: null,
     });
 
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const [isSuccess, setIsSuccess] = useState<boolean>(false);
 
     useFocusEffect(
         React.useCallback(() => {
-            setExpense({
+            setIncome({
                 title: '',
                 description: '',
                 category: 'income',
@@ -98,7 +109,7 @@ const CreateIncomeScreen: React.FC<CreateExpenseScreenProps> = ({ navigation, us
         });
 
         if (!result.canceled) {
-            setExpense({ ...expense, receipt: result.assets[0] });
+            setIncome({ ...income, receipt: result.assets[0] });
         }
     };
 
@@ -111,31 +122,32 @@ const CreateIncomeScreen: React.FC<CreateExpenseScreenProps> = ({ navigation, us
         });
 
         if (!result.canceled) {
-            setExpense({ ...expense, receipt: result.assets[0] });
+            setIncome({ ...income, receipt: result.assets[0] });
         }
     };
 
-    const handleInputChange = (key: keyof Expense, value: any) => {
+    const handleInputChange = (key: keyof Income, value: any) => {
         if (key === 'amount') {
             if (/^\d*\.?\d*$/.test(value)) {
-                setExpense({ ...expense, [key]: value });
+                setIncome({ ...income, [key]: value });
             }
         } else {
-            setExpense({ ...expense, [key]: value });
+            setIncome({ ...income, [key]: value });
         }
     };
 
     const handleSubmit = async () => {
+        setIsLoading(true);  // Start loading
         const formData = new FormData();
     
-        formData.append('title', expense.title);
-        formData.append('description', expense.description);
-        formData.append('category', expense.category);
-        formData.append('amount', expense.amount.toString());
-        formData.append('currency', expense.currency);
+        formData.append('title', income.title);
+        formData.append('description', income.description);
+        formData.append('category', income.category);
+        formData.append('amount', income.amount.toString());
+        formData.append('currency', income.currency);
     
-        if (expense.receipt) {
-            const fileUri = expense.receipt.uri;
+        if (income.receipt) {
+            const fileUri = income.receipt.uri;
             const fileName = fileUri.split('/').pop();
             const response = await fetch(fileUri);
             const blob = await response.blob();
@@ -148,7 +160,7 @@ const CreateIncomeScreen: React.FC<CreateExpenseScreenProps> = ({ navigation, us
         }
     
         try {
-            const response = await axios.post(`${SERVER_URL}/expenses`, formData, {
+            const response = await axios.post(`${SERVER_URL}/income`, formData, {
                 headers: {
                     'Authorization': `Bearer ${user.token}`,
                     'Content-Type': 'multipart/form-data',
@@ -158,7 +170,9 @@ const CreateIncomeScreen: React.FC<CreateExpenseScreenProps> = ({ navigation, us
             setIsSuccess(true);
         } catch (error) {
             console.error('Error:', error);
-            Alert.alert('Error', 'There was an issue creating your expense. Please try again.');
+            Alert.alert('Error', 'There was an issue creating your income. Please try again.');
+        } finally {
+            setIsLoading(false);  // Stop loading
         }
     };
 
@@ -174,113 +188,117 @@ const CreateIncomeScreen: React.FC<CreateExpenseScreenProps> = ({ navigation, us
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View style={styles.container}>
-                <GenericTopBar heightPercentage={8} title={'New Income'} />
+                <GenericTopBar heightPercentage={9} title={'New Income'} />
                 <View style={styles.mainContainer}>
-                    <Animatable.View
-                        animation={isSuccess ? "fadeIn" : undefined}
-                        duration={2000}
-                        style={[styles.card, isSuccess && styles.successCard]}
-                    >
-                        {isSuccess && (
-                            <View>
+                    {isLoading ? (
+                        <View style={styles.loadingContainer}>
+                            <ActivityIndicator size="large" color="#28A745" />
+                            <Text style={styles.loadingText}>Submitting Income...</Text>
+                        </View>
+                    ) : (
+                        <Animatable.View
+                            animation={isSuccess ? "fadeIn" : undefined}
+                            duration={2000}
+                            style={[styles.card, isSuccess && styles.successCard]}
+                        >
+                            {isSuccess ? (
                                 <View>
                                     <Animatable.View
                                         animation="bounceIn"
-                                        duration={6000}
+                                        duration={600}
                                         style={styles.successContainer}
                                     >
                                         <Icon name="checkmark-circle" size={100} color="#FFF" />
                                     </Animatable.View>
-                                </View>
-                                <View style={styles.buttonGroup}>
-                                    <TouchableOpacity
-                                        style={styles.anotherButton}
-                                        onPress={() => {
-                                            // Reset the form state to initial values
-                                            setExpense({
-                                                title: '',
-                                                description: '',
-                                                category: 'income',
-                                                amount: '',
-                                                currency: 'EUR',
-                                                receipt: null,
-                                            });
-                                            setIsSuccess(false);
-                                        }}
-                                    >
-                                        <Text style={styles.anotherButtonText}>Add Another Income</Text>
-                                    </TouchableOpacity>
-                                    <TouchableOpacity
-                                        style={styles.addExpenseButton}
-                                        onPress={() => navigation.navigate('Income')}
-                                    >
-                                        <Text style={styles.anotherButtonText}>View Income</Text>
-                                    </TouchableOpacity>
-                                </View>
-                            </View>
-                        )}
-
-                        {!isSuccess && (
-                            <>
-                                <Text style={styles.inputLabel}>Title</Text>
-                                <TextInput
-                                    style={styles.input}
-                                    placeholder="Income title"
-                                    value={expense.title}
-                                    onChangeText={(text) => handleInputChange('title', text)}
-                                />
-
-                                <Text style={styles.inputLabel}>Description</Text>
-                                <TextInput
-                                    style={styles.input}
-                                    placeholder="Income description"
-                                    value={expense.description}
-                                    onChangeText={(text) => handleInputChange('description', text)}
-                                />
-
-                                <View style={styles.inlineContainer}>
-                                    <View style={styles.amountContainer}>
-                                        <Text style={styles.inputLabel}>Amount</Text>
-                                        <TextInput
-                                            style={styles.input}
-                                            placeholder="Amount"
-                                            value={expense.amount.toString()}
-                                            keyboardType="numeric"
-                                            onChangeText={(text) => handleInputChange('amount', text)}
-                                        />
-                                    </View>
-
-                                    <View style={styles.currencyContainer}>
-                                        <Text style={styles.inputLabel}>Currency</Text>
-                                        <View style={styles.pickerWrapper}>
-                                        <CustomDropdown
-                                            selectedValue={currency}
-                                            onValueChange={setCurrency}
-                                            items={items}
-                                        />
-                                        </View>
-                                        
-                                    </View>
-                                </View>
-
-                                <Text style={styles.inputLabel}>Upload Documentation</Text>
-                                {expense.receipt ? (
-                                    <View style={styles.imageContainer}>
-                                        <Text style={styles.receiptFilename}>{expense.receipt.uri.split('/').pop()}</Text>
-                                        <TouchableOpacity onPress={pickImage}>
-                                            <Text style={styles.replaceButtonText}>Replace</Text>
+                                    <View style={styles.buttonGroup}>
+                                        <TouchableOpacity
+                                            style={styles.anotherButton}
+                                            onPress={() => {
+                                                setIncome({
+                                                    title: '',
+                                                    description: '',
+                                                    category: 'income',
+                                                    amount: '',
+                                                    currency: 'EUR',
+                                                    receipt: null,
+                                                });
+                                                setIsSuccess(false);
+                                            }}
+                                        >
+                                            <Text style={styles.anotherButtonText}>Add Another Income</Text>
+                                        </TouchableOpacity>
+                                        <TouchableOpacity
+                                            style={styles.addExpenseButton}
+                                            onPress={() => navigation.navigate('Income')}
+                                        >
+                                            <Text style={styles.anotherButtonText}>View Income</Text>
                                         </TouchableOpacity>
                                     </View>
-                                ) : (
-                                    <TouchableOpacity style={styles.imagePicker} onPress={pickImage}>
-                                        <Text style={styles.plusSign}>+</Text>
-                                    </TouchableOpacity>
-                                )}
-                            </>
-                        )}
-                    </Animatable.View>
+                                </View>
+                            ) : (
+                                <>
+                                    <Text style={styles.inputLabel}>Title</Text>
+                                    <TextInput
+                                        style={styles.input}
+                                        placeholder="Income title"
+                                        value={income.title}
+                                        onChangeText={(text) => handleInputChange('title', text)}
+                                    />
 
-                    {!isSuccess && (
+                                    <Text style={styles.inputLabel}>Description</Text>
+                                    <TextInput
+                                        style={styles.input}
+                                        placeholder="Income description"
+                                        value={income.description}
+                                        onChangeText={(text) => handleInputChange('description', text)}
+                                    />
+
+                                    <View style={styles.inlineContainer}>
+                                        <View style={styles.amountContainer}>
+                                            <Text style={styles.inputLabel}>Amount</Text>
+                                            <TextInput
+                                                style={styles.input}
+                                                placeholder="Amount"
+                                                value={income.amount.toString()}
+                                                keyboardType="numeric"
+                                                onChangeText={(text) => handleInputChange('amount', text)}
+                                            />
+                                        </View>
+
+                                        <View style={styles.currencyContainer}>
+                                            <Text style={styles.inputLabel}>Currency</Text>
+                                            <View style={styles.pickerWrapper}>
+                                                <CustomDropdown
+                                                    selectedValue={currency}
+                                                    onValueChange={(value) => {
+                                                        setCurrency(value);
+                                                        handleInputChange('currency', value);
+                                                    }}
+                                                    items={items}
+                                                />
+                                            </View>
+                                        </View>
+                                    </View>
+
+                                    <Text style={styles.inputLabel}>Upload Documentation</Text>
+                                    {income.receipt ? (
+                                        <View style={styles.imageContainer}>
+                                            <Text style={styles.receiptFilename}>{income.receipt.uri.split('/').pop()}</Text>
+                                            <TouchableOpacity onPress={pickImage}>
+                                                <Text style={styles.replaceButtonText}>Replace</Text>
+                                            </TouchableOpacity>
+                                        </View>
+                                    ) : (
+                                        <TouchableOpacity style={styles.imagePicker} onPress={pickImage}>
+                                            <Text style={styles.plusSign}>+</Text>
+                                        </TouchableOpacity>
+                                    )}
+                                </>
+                            )}
+                        </Animatable.View>
+                    )}
+
+                    {!isSuccess && !isLoading && (
                         <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
                             <Text style={styles.submitButtonText}>Submit Income</Text>
                         </TouchableOpacity>
@@ -299,6 +317,8 @@ const styles = StyleSheet.create({
     mainContainer: {
         paddingVertical: 20,
         paddingHorizontal: 10,
+        flex: 1, // Ensure main container takes up available space
+        justifyContent: 'center', // Center content vertically when loading
     },
     card: {
         backgroundColor: '#FFFFFF',
@@ -432,6 +452,16 @@ const styles = StyleSheet.create({
         color: '#FFFFFF',
         fontSize: 16,
         fontWeight: '600',
+    },
+    loadingContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    loadingText: {
+        marginTop: 10,
+        fontSize: 18,
+        color: '#333',
     },
 });
 
