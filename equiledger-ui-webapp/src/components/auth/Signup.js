@@ -1,19 +1,22 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; 
+import { useLocation, useNavigate } from 'react-router-dom'; 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { useSignup } from '../../context/SignupContext';
 import AuthService from '../../services/AuthService';
 
 const Signup = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { setHasSignedUp } = useSignup();
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
-  
-  const navigate = useNavigate();
-  const { setHasSignedUp } = useSignup();
+
+  const token = new URLSearchParams(location.search).get('token');
 
   const validatePassword = (password) => {
     const hasUpperCase = /[A-Z]/.test(password);
@@ -37,11 +40,11 @@ const Signup = () => {
       setError('Password must be at least 8 characters, include one uppercase letter, one number, and one special character.');
       return;
     }
-    const signUpResp = await AuthService.signup(email, password);
+    
+    const signUpResp = await AuthService.signup(email, password, token);
+    
     if (signUpResp.status_code === 201) {
       setHasSignedUp(true);
-
-      console.log('Creating account for', email, password);
       navigate('/createaccount', { state: { email, password } });
     } else {
       setError(signUpResp.message);
